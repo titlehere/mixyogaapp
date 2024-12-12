@@ -1,13 +1,17 @@
-/** @type {import('tailwindcss').Config} */
-export default {
-  content: [
-    "./resources/**/*.blade.php",
-    "./resources/**/*.js",
-    "./resources/**/*.vue",
-  ],
+module.exports = {
+  content: ["./resources/**/*.blade.php", "./resources/**/*.js"],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        primary: "#4A90E2", // Warna utama
+        secondary: "#F5A623", // Warna aksen
+        background: "#F7F9FC", // Background warna
+      },
+      fontFamily: {
+        sans: ["Roboto", "Arial", "sans-serif"],
+        display: ["Poppins", "sans-serif"],
+      },
+    },
   },
   plugins: [],
-}
-
+};
