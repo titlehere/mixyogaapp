@@ -17,9 +17,10 @@ class Member extends Authenticatable
     public $incrementing = false;
 
     public $timestamps = false;
-    
+
     protected $keyType = 'string';
 
+    // Tambahkan 'profile_photo' ke dalam fillable
     protected $fillable = [
         'member_uuid',
         'member_name',
@@ -27,6 +28,7 @@ class Member extends Authenticatable
         'member_pass',
         'member_phone',
         'member_status',
+        'profile_photo',
     ];
 
     protected $hidden = [

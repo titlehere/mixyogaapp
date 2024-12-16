@@ -1,53 +1,58 @@
 @extends('layouts.main')
 
 @section('content')
-<div class="max-w-md mx-auto mt-10">
-    <!-- Display Errors or Success Messages -->
-    @if ($errors->any())
-        <div class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div class="bg-white p-6 rounded shadow-lg">
-                <h2 class="text-lg font-bold text-red-500 mb-4">Login Error</h2>
-                <ul class="list-disc list-inside text-red-500">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-                <button onclick="this.parentElement.parentElement.remove()" class="mt-4 bg-red-500 text-white px-4 py-2 rounded">Close</button>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            
+            <!-- Display Errors or Success Messages -->
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <h4 class="fw-bold">Login Error</h4>
+                    <ul class="mb-0">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            @if (session('success'))
+                <div class="alert alert-success">
+                    <h4 class="fw-bold">Success</h4>
+                    <p>{{ session('success') }}</p>
+                </div>
+            @endif
+
+            <!-- Login Form -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white text-center">
+                    <h4 class="mb-0">Welcome Back!</h4>
+                </div>
+                <div class="card-body">
+                    <form action="{{ route('login') }}" method="POST">
+                        @csrf
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email Address</label>
+                            <input type="email" name="email" class="form-control" placeholder="Enter your email" required>
+                        </div>
+                        
+                        <div class="mb-3 position-relative">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" id="password" name="password" class="form-control" placeholder="Enter your password" required>
+                            <button type="button" onclick="togglePassword('password')" class="btn btn-link position-absolute top-0 end-0 mt-2 me-2">Show</button>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100">Log In</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Sign Up Link -->
+            <div class="mt-3 text-center">
+                <p>Don't have an account? <a href="{{ route('register') }}" class="text-primary">Sign Up</a></p>
             </div>
         </div>
-    @endif
-
-    @if (session('success'))
-        <div class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div class="bg-white p-6 rounded shadow-lg">
-                <h2 class="text-lg font-bold text-green-500 mb-4">Success</h2>
-                <p>{{ session('success') }}</p>
-                <button onclick="this.parentElement.parentElement.remove()" class="mt-4 bg-green-500 text-white px-4 py-2 rounded">Close</button>
-            </div>
-        </div>
-    @endif
-
-    <div class="text-center mb-6">
-        <h1 class="text-2xl font-bold">Welcome Back!</h1>
-    </div>
-
-    <form action="{{ route('login') }}" method="POST">
-        @csrf
-        <input type="email" name="email" class="w-full border p-2 mb-4" placeholder="Email Address" required>
-        
-        <div class="relative">
-            <input type="password" id="password" name="password" class="w-full border p-2 mb-4" placeholder="Password" required>
-            <button type="button" onclick="togglePassword('password')" class="absolute right-2 top-1/2 transform -translate-y-1/2 text-blue-500 hover:underline">Show</button>
-        </div>
-
-        {{-- <div class="flex justify-between items-center mb-4">
-            <a href="https://wa.me/1234567890?text=Tolong,%20saya%20lupa%20password." target="_blank" class="text-blue-500 hover:underline">Contact if Forgot Password</a>
-        </div> --}}
-        <button type="submit" class="bg-blue-500 text-white w-full py-2 rounded">Log In</button>
-    </form>
-
-    <div class="mt-4 text-center">
-        <span>Don't have an account? <a href="{{ route('register') }}" class="text-blue-500 hover:underline">Sign Up</a></span>
     </div>
 </div>
 
