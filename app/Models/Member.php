@@ -29,6 +29,8 @@ class Member extends Authenticatable
         'member_phone',
         'member_status',
         'profile_photo',
+        'saved_classes', // Kolom untuk menyimpan ID kelas
+        'saved_studios', // Kolom untuk menyimpan ID studio
     ];
 
     protected $hidden = [
@@ -39,4 +41,12 @@ class Member extends Authenticatable
     {
         return $this->member_pass;
     }
+    public function savedStudios()
+    {
+        return $this->belongsToMany(StudioYoga::class, 'saved_studios', 'member_uuid', 'studio_uuid');
+    }
+    protected $casts = [
+        'saved_classes' => 'array', // Cast JSON to array
+        'saved_studios' => 'array',
+    ];
 }

@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container">
-    <h2 class="mb-4">Profil Saya</h2>
+    <h2 class="mb-4">Edit Profil Saya</h2>
 
     <!-- Notifikasi sukses -->
     @if (session('success'))
@@ -14,7 +14,7 @@
         @csrf
         <div class="mb-3">
             <label for="profile_photo" class="form-label">Foto Profil</label>
-            <input type="file" class="form-control" id="profile_photo" name="profile_photo" accept=".jpg, .jpeg, .png">
+            <input type="file" class="form-control" id="profile_photo" name="profile_photo" accept="image/jpeg,image/png,image/jpg">
             @if ($user->profile_photo)
                 <!-- Tampilkan gambar yang sudah diunggah -->
                 <img src="{{ asset('public/images/profiles/' . $user->profile_photo) }}" 

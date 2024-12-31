@@ -10,6 +10,12 @@
         @forelse ($savedKelas as $kelas)
             <div class="col-md-4 mb-4">
                 <div class="card shadow-sm">
+                    <a href="{{ route('kelas.detail', $kelas->kelas_uuid) }}">
+                        <img src="{{ asset('public/images/kelas_thumbnails/' . $kelas->kelas_thumbnail) }}" 
+                            class="card-img-top" 
+                            alt="Thumbnail Kelas {{ $kelas->kelas_name }}" 
+                            style="max-height: 200px; object-fit: cover;">
+                    </a>
                     <div class="card-body">
                         <h5 class="card-title">{{ $kelas->kelas_name }}</h5>
                         <p class="card-text">{{ $kelas->kelas_desk }}</p>
@@ -28,6 +34,12 @@
         @forelse ($savedStudios as $studio)
             <div class="col-md-4 mb-4">
                 <div class="card shadow-sm">
+                    <a href="{{ route('studio.detail', $studio->studio_uuid) }}">
+                        <img src="{{ asset('public/images/studio_logos/' . $studio->studio_logo) }}" 
+                            class="card-img-top" 
+                            alt="Logo Studio {{ $studio->studio_name }}" 
+                            style="max-height: 200px; object-fit: cover;">
+                    </a>
                     <div class="card-body">
                         <h5 class="card-title">{{ $studio->studio_name }}</h5>
                         <p class="card-text">{{ $studio->studio_desk }}</p>

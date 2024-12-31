@@ -20,13 +20,28 @@ class RegisterController extends Controller
     // Proses registrasi member
     public function registerMember(Request $request)
     {
-        // Validasi input
+        // Validasi input dengan pesan kustom
         $validatedData = $request->validate([
             'username' => ['required', 'string', 'max:255'],
-            'email'    => ['required', 'email', 'unique:member,member_email'],
+            'email'    => ['required', 'email', 'regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/', 'unique:member,member_email'],
             'phone'    => ['required', 'regex:/^(\+62|62|0)8[1-9][0-9]{6,11}$/'],
             'password' => ['required', 'string', 'min:5', 'max:12', 'confirmed'],
             'profile_photo' => ['required', 'image', 'mimes:jpg,jpeg,png', 'max:2048'],
+        ], [
+            'username.required' => 'Username wajib diisi.',
+            'email.required'    => 'Email wajib diisi.',
+            'email.email'       => 'Format email tidak valid.',
+            'email.unique'      => 'Email sudah terdaftar.',
+            'phone.required'    => 'Nomor telepon wajib diisi.',
+            'phone.regex'       => 'Format nomor telepon tidak valid. Contoh: 081234567890.',
+            'password.required' => 'Password wajib diisi.',
+            'password.min'      => 'Password minimal 5 karakter.',
+            'password.max'      => 'Password maksimal 12 karakter.',
+            'password.confirmed'=> 'Konfirmasi password tidak sesuai.',
+            'profile_photo.required' => 'Foto profil wajib diunggah.',
+            'profile_photo.image'    => 'Foto profil harus berupa gambar.',
+            'profile_photo.mimes'    => 'Format gambar hanya boleh jpg, jpeg, atau png.',
+            'profile_photo.max'      => 'Ukuran gambar maksimal 2 MB.',
         ]);
 
         // Upload gambar profil jika ada
@@ -58,15 +73,32 @@ class RegisterController extends Controller
     // Proses registrasi owner studio
     public function registerOwner(Request $request)
     {
-        // Validasi input
+        // Validasi input dengan pesan kustom
         $validatedData = $request->validate([
             'username'             => ['required', 'string', 'max:255'],
-            'email'                => ['required', 'email', 'unique:owner_studio,owner_email'],
+            'email'                => ['required', 'email', 'regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/', 'unique:owner_studio,owner_email'],
             'phone'                => ['required', 'regex:/^(\+62|62|0)8[1-9][0-9]{6,11}$/'],
             'password'             => ['required', 'string', 'min:5', 'max:12', 'confirmed'],
             'studio_name'          => ['required', 'string', 'max:255'],
             'studio_address'       => ['required', 'string', 'max:255'],
             'studio_logo'          => ['required', 'image', 'mimes:jpeg,png,jpg', 'max:2048'],
+        ], [
+            'username.required'     => 'Nama pengguna wajib diisi.',
+            'email.required'        => 'Email wajib diisi.',
+            'email.email'           => 'Format email tidak valid.',
+            'email.unique'          => 'Email sudah terdaftar.',
+            'phone.required'        => 'Nomor telepon wajib diisi.',
+            'phone.regex'           => 'Format nomor telepon tidak valid. Contoh: 081234567890.',
+            'password.required'     => 'Password wajib diisi.',
+            'password.min'          => 'Password minimal 5 karakter.',
+            'password.max'          => 'Password maksimal 12 karakter.',
+            'password.confirmed'    => 'Konfirmasi password tidak sesuai.',
+            'studio_name.required'  => 'Nama studio wajib diisi.',
+            'studio_address.required' => 'Alamat studio wajib diisi.',
+            'studio_logo.required'  => 'Logo studio wajib diunggah.',
+            'studio_logo.image'     => 'Logo studio harus berupa gambar.',
+            'studio_logo.mimes'     => 'Format gambar hanya boleh jpg, jpeg, atau png.',
+            'studio_logo.max'       => 'Ukuran gambar maksimal 2 MB.',
         ]);
 
         try {

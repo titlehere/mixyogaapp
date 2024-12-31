@@ -34,4 +34,25 @@ class Pembayaran extends Model
     {
         return $this->belongsTo(StudioYoga::class, 'studio_uuid', 'studio_uuid');
     }
+    
+    /**
+     * Menghasilkan data laporan berdasarkan periode dan studio_uuid
+     *
+     * @param string $studioUuid
+     * @return \Illuminate\Support\Collection
+     */
+    public static function laporanPeriode($studioUuid)
+    {
+        return self::selectRaw("
+            DATE_FORMAT(payment_date, '%M %Y') as periode,
+            COUNT(payment_uuid) as jumlah_transaksi,
+            SUM(payment_nominal) as total_pendapatan,
+            COUNT(CASE WHEN payment_status = 'Failed' THEN 1 END) as jumlah_pembatalan,
+            SUM(CASE WHEN payment_status = 'Failed' THEN payment_nominal ELSE 0 END) as pendapatan_hilang
+        ")
+        ->where('studio_uuid', $studioUuid)
+        ->groupByRaw("DATE_FORMAT(payment_date, '%M %Y')")
+        ->orderByRaw("MIN(payment_date) ASC")
+        ->get();
+    }
 }

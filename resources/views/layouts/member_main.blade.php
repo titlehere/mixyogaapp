@@ -47,6 +47,9 @@
                 <!-- Sidebar Buttons -->
                 <ul class="nav flex-column">
                     <li class="nav-item mb-2">
+                        <a href="{{ route('member.dashboard') }}" class="nav-link text-dark"><i class="bi bi-house-door me-2"></i> Halaman Utama</a>
+                    </li>
+                    <li class="nav-item mb-2">
                         <a href="{{ route('member.profile') }}" class="nav-link text-dark"><i class="bi bi-person me-2"></i> Profil Saya</a>
                     </li>
                     <li class="nav-item mb-2">

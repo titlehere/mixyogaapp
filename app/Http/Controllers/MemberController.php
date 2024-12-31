@@ -66,19 +66,77 @@ class MemberController extends Controller
         return $pesanController->showOrders();
     }
 
-    // Menampilkan halaman Simpan
+    public function saveStudio(Request $request, $studio_uuid)
+    {
+        $user = session('user');
+        $member = Member::findOrFail($user->member_uuid);
+
+        $savedStudios = $member->saved_studios ?? [];
+        if (!in_array($studio_uuid, $savedStudios)) {
+            $savedStudios[] = $studio_uuid;
+            $member->saved_studios = $savedStudios;
+            $member->save();
+        }
+
+        return redirect()->back()->with('success', 'Studio berhasil disimpan!');
+    }
+
+    public function saveClass(Request $request, $class_uuid)
+    {
+        $user = session('user');
+        $member = Member::findOrFail($user->member_uuid);
+
+        $savedClasses = $member->saved_classes ?? [];
+        if (!in_array($class_uuid, $savedClasses)) {
+            $savedClasses[] = $class_uuid;
+            $member->saved_classes = $savedClasses;
+            $member->save();
+        }
+
+        return redirect()->back()->with('success', 'Kelas berhasil disimpan!');
+    }
+
     public function showSavedItems()
     {
         $user = session('user');
+        $member = Member::findOrFail($user->member_uuid);
 
-        // Ambil data kelas dan studio yang disimpan member
-        $savedKelas = KelasYoga::where('studio_uuid', '!=', null)->take(3)->get();
-        $savedStudios = StudioYoga::take(3)->get();
+        $savedClasses = KelasYoga::whereIn('kelas_uuid', $member->saved_classes ?? [])->get();
+        $savedStudios = StudioYoga::whereIn('studio_uuid', $member->saved_studios ?? [])->get();
 
         return view('member.dashboard.simpan', [
-            'title' => 'Simpan Kelas & Studio',
-            'savedKelas' => $savedKelas,
+            'savedKelas' => $savedClasses,
             'savedStudios' => $savedStudios,
+        ]);
+    }
+
+    public function dashboard(Request $request)
+    {
+        $search = $request->input('search');
+
+        // Mengambil kelas yoga terbaru
+        $latestClasses = KelasYoga::when($search, function ($query, $search) {
+            $query->where('kelas_name', 'like', "%$search%")
+                ->orWhereHas('studio', function ($query) use ($search) {
+                    $query->where('studio_name', 'like', "%$search%");
+                });
+        })->orderBy('kelas_uuid', 'desc') // Ganti 'kelas_uuid' dengan kolom pengurutan yang relevan
+        ->take(5)
+        ->get();
+
+        // Mengambil studio yoga terbaru
+        $latestStudios = StudioYoga::when($search, function ($query, $search) {
+            $query->where('studio_name', 'like', "%$search%")
+                ->orWhere('studio_lokasi', 'like', "%$search%");
+        })->orderBy('studio_uuid', 'desc') // Ganti 'studio_uuid' dengan kolom pengurutan yang relevan
+        ->take(5)
+        ->get();
+
+        return view('member.dashboard.member', [
+            'title' => 'Dashboard Member',
+            'latestClasses' => $latestClasses,
+            'latestStudios' => $latestStudios,
+            'search' => $search,
         ]);
     }
 }

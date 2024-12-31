@@ -8,10 +8,10 @@
         <p class="text-secondary">Temukan kelas yoga terbaik untuk Anda!</p>
     </header>
 
-    <!-- Search Bar -->
+    {{-- <!-- Search Bar -->
     <div class="mb-5">
         <input type="text" class="form-control" placeholder="Cari studio yoga (nama, lokasi, harga, jenis kelas)">
-    </div>
+    </div> --}}
 
     <!-- Studio Yoga Terpopuler -->
     <section class="mb-5">
@@ -46,7 +46,7 @@
     <section>
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h2 class="text-primary">Rekomendasi Kelas</h2>
-            <a href="#" class="btn btn-primary">Jelajah Kelas</a>
+            {{-- <a href="#" class="btn btn-primary">Jelajah Kelas</a> --}}
         </div>
         <div class="d-flex overflow-auto">
             @for ($i = 1; $i <= 5; $i++)
@@ -54,7 +54,7 @@
                     <img src="{{ asset('public/images/class_recommendation_'.$i.'.jpg') }}" class="card-img-top" alt="Kelas Yoga #{{ $i }}">
                     <div class="card-body">
                         <h5 class="card-title text-primary">Kelas Yoga #{{ $i }}</h5>
-                        {{-- <button class="btn btn-link text-primary">Lihat Detail</button> --}}
+                        <button class="btn btn-link text-primary">Lihat Detail</button>
                     </div>
                 </div>
             @endfor

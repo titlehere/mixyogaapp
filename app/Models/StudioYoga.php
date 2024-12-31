@@ -32,4 +32,19 @@ class StudioYoga extends Model
     {
         return $this->belongsTo(OwnerStudio::class, 'owner_uuid', 'owner_uuid');
     }
+
+    public function classes()
+    {
+        return $this->hasMany(KelasYoga::class, 'studio_uuid', 'studio_uuid');
+    }
+
+    public function trainers()
+    {
+        return $this->hasMany(Trainer::class, 'studio_uuid', 'studio_uuid');
+    }    
+
+    public function savedByMembers()
+    {
+        return $this->belongsToMany(Member::class, 'saved_studios', 'studio_uuid', 'member_uuid');
+    }
 }

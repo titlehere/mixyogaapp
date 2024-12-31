@@ -15,7 +15,6 @@
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="cancelled-tab" data-bs-toggle="pill" data-bs-target="#cancelled" type="button">Dibatalkan</button>
         </li>
-        <a href="{{ route('member.dashboard') }}" class="btn btn-secondary ms-2">Kembali ke Dashboard</a>
     </ul>
 
     <!-- Tab Content -->
@@ -23,7 +22,7 @@
         <!-- Tab Berlangsung -->
         <div class="tab-pane fade show active" id="ongoing">
             @forelse ($ongoingOrders as $order)
-                @include('member.partials.order_card', ['order' => $order])
+                @include('member.dashboard.partials.order_card', ['order' => $order])
             @empty
                 <p>Tidak ada pesanan yang sedang berlangsung.</p>
             @endforelse
@@ -32,7 +31,7 @@
         <!-- Tab Selesai -->
         <div class="tab-pane fade" id="completed">
             @forelse ($completedOrders as $order)
-                @include('member.partials.order_card', ['order' => $order])
+                @include('member.dashboard.partials.order_card', ['order' => $order])
             @empty
                 <p>Tidak ada pesanan yang selesai.</p>
             @endforelse
@@ -41,11 +40,12 @@
         <!-- Tab Dibatalkan -->
         <div class="tab-pane fade" id="cancelled">
             @forelse ($cancelledOrders as $order)
-                @include('member.partials.order_card', ['order' => $order])
+                @include('member.dashboard.partials.order_card', ['order' => $order])
             @empty
                 <p>Tidak ada pesanan yang dibatalkan.</p>
             @endforelse
         </div>
     </div>
+    <a href="{{ route('member.dashboard') }}" class="btn btn-secondary ms-2">Kembali ke Dashboard</a>
 </div>
 @endsection

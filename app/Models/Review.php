@@ -39,4 +39,10 @@ class Review extends Model
     {
         return $this->belongsTo(Jadwal::class, 'jadwal_uuid', 'jadwal_uuid');
     }
+    
+    public function studio()
+    {
+        return $this->belongsTo(StudioYoga::class, 'studio_uuid', 'studio_uuid');
+    }
+
 }

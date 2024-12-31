@@ -17,7 +17,7 @@
                 <i class="bi bi-list"></i>
             </button>
             <!-- Logo Tengah -->
-            <a href="{{ route('member.dashboard') }}" class="d-block">
+            <a href="{{ route('owner.dashboard') }}" class="d-block">
                 <img src="{{ asset('public/images/logo-mix-yoga.jpg') }}" alt="Mix Yoga Logo" class="img-fluid" style="height: 50px;">
             </a>
             <!-- Logout -->
@@ -34,34 +34,38 @@
                 <!-- Profile -->
                 <div class="text-center mb-4">
                     <div style="width: 100px; height: 100px; overflow: hidden; border: 2px solid #ddd; border-radius: 50%;">
-                        @if (session('user')->studio_logo)
-                            <img src="{{ asset('public/images/studio_logos/' . session('user')->studio_logo) }}" 
-                                class="w-100 h-100 object-fit-cover" alt="Logo Studio">
-                        @else
-                            <div class="text-muted d-flex align-items-center justify-content-center h-100">No Image</div>
-                        @endif
+                    @if ($studio && $studio->studio_logo)
+                        <img src="{{ asset('public/images/studio_logos/' . $studio->studio_logo) }}" 
+                            class="w-100 h-100 object-fit-cover" alt="Logo Studio">
+                    @else
+                        <div class="text-muted d-flex align-items-center justify-content-center h-100">No Image</div>
+                    @endif                    
                     </div>   
-                    <h5>{{ session('user')->member_name }}</h5>
-                </div>                                          
+                    <h5>{{ $studio->studio_name ?? 'Unknown Studio' }}</h5>
+                </div>                                                         
                 <!-- Sidebar Buttons -->
                 <ul class="nav flex-column">
                     <li class="nav-item mb-2">
-                        <a href="#" class="nav-link text-dark"><i class="bi bi-building me-2"></i> Profil & Studio</a>
+                        <a href="{{ route('owner.dashboard') }}" class="nav-link text-dark"><i class="bi bi-house-door me-2"></i> Halaman Utama</a>
                     </li>
                     <li class="nav-item mb-2">
-                        <a href="#" class="nav-link text-dark"><i class="bi bi-calendar-check me-2"></i> Penjadwalan</a>
+                        <a href="{{ route('owner.profile_studio') }}" class="nav-link text-dark"><i class="bi bi-building me-2"></i> Profil & Studio</a>
                     </li>
                     <li class="nav-item mb-2">
-                        <a href="#" class="nav-link text-dark"><i class="bi bi-person-square me-2"></i> Profile Trainer</a>
+                        <a href="{{ route('owner.kelola_kelas') }}" class="nav-link text-dark">
+                            <i class="bi bi-calendar-check me-2"></i> Kelas & Penjadwalan
+                        </a>
+                    </li>                                     
+                    <li class="nav-item mb-2">
+                        <a href="{{ route('owner.profile_trainer') }}" class="nav-link text-dark">
+                            <i class="bi bi-person-square me-2"></i> Data Trainer
+                        </a>
+                    </li>                  
+                    <li class="nav-item mb-2">
+                        <a href="{{ route('owner.laporan') }}" class="nav-link text-dark"><i class="bi bi-bar-chart-line me-2"></i> Laporan</a>
                     </li>
                     <li class="nav-item mb-2">
-                        <a href="#" class="nav-link text-dark"><i class="bi bi-clipboard-data me-2"></i> Kelola Kelas</a>
-                    </li>
-                    <li class="nav-item mb-2">
-                        <a href="#" class="nav-link text-dark"><i class="bi bi-bar-chart-line me-2"></i> Laporan</a>
-                    </li>
-                    <li class="nav-item mb-2">
-                        <a href="#" class="nav-link text-dark"><i class="bi bi-question-circle me-2"></i> Bantuan & FAQ</a>
+                        <a href="{{ route('owner.bantuan_faq') }}" class="nav-link text-dark"><i class="bi bi-question-circle me-2"></i> Bantuan & FAQ</a>
                     </li>
                     <li class="nav-item">
                         <a href="{{ route('logout') }}" class="nav-link text-danger"><i class="bi bi-box-arrow-right me-2"></i> Log Out</a>

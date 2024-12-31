@@ -2,6 +2,17 @@
 
 @section('content')
 <div class="container py-5">
+    <!-- Pesan Error -->
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul class="mb-0">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <!-- Toggle Buttons -->
     <div class="text-center mb-4">
         <button id="btnMember" class="btn btn-primary me-2">Member</button>
@@ -14,17 +25,17 @@
             @csrf
             <h3 class="mb-4 text-primary">Member Registration</h3>
             <div class="mb-3">
-                <input type="text" name="username" class="form-control" placeholder="Username" required>
+                <input type="text" name="username" class="form-control" placeholder="Username" value="{{ old('username') }}" required>
             </div>
             <div class="mb-3">
-                <input type="email" name="email" class="form-control" placeholder="Email (example@email.com)" required>
+                <input type="email" name="email" class="form-control" placeholder="Email (example@email.com)" value="{{ old('email') }}" required>
             </div>
             <div class="mb-3">
-                <input type="text" name="phone" class="form-control" placeholder="No HP (ex: 081234567890)" required>
+                <input type="text" name="phone" class="form-control" placeholder="No HP (ex: 081234567890)" value="{{ old('phone') }}" required>
             </div>
             <div class="mb-3">
-                <label for="profile_photo" class="form-label">Foto Profil (optional)</label>
-                <input type="file" name="profile_photo" class="form-control" accept="image/png, image/jpg, image/jpeg">
+                <label for="profile_photo" class="form-label">Photo Profil</label>
+                <input type="file" name="profile_photo" class="form-control" accept="image/png, image/jpg, image/jpeg" required>
             </div>
             <div class="mb-3 position-relative">
                 <input type="password" id="memberPassword" name="password" class="form-control" placeholder="Password" required>
@@ -50,13 +61,13 @@
             <!-- Owner Details -->
             <h5 class="text-secondary mb-3">Owner Details</h5>
             <div class="mb-3">
-                <input type="text" name="username" class="form-control" placeholder="Username" required>
+                <input type="text" name="username" class="form-control" placeholder="Username" value="{{ old('username') }}" required>
             </div>
             <div class="mb-3">
-                <input type="email" name="email" class="form-control" placeholder="Email (example@email.com)" required>
+                <input type="email" name="email" class="form-control" placeholder="Email (example@email.com)" value="{{ old('email') }}" required>
             </div>
             <div class="mb-3">
-                <input type="text" name="phone" class="form-control" placeholder="No HP (ex: 081234567890)" required>
+                <input type="text" name="phone" class="form-control" placeholder="No HP (ex: 081234567890)" value="{{ old('phone') }}" required>
             </div>
             <div class="mb-3 position-relative">
                 <input type="password" id="ownerPassword" name="password" class="form-control" placeholder="Password" required>
@@ -74,12 +85,13 @@
             <!-- Studio Details -->
             <h5 class="text-secondary mb-3">Studio Details</h5>
             <div class="mb-3">
-                <input type="text" name="studio_name" class="form-control" placeholder="Nama Studio" required>
+                <input type="text" name="studio_name" class="form-control" placeholder="Nama Studio" value="{{ old('studio_name') }}" required>
             </div>
             <div class="mb-3">
-                <input type="text" name="studio_address" class="form-control" placeholder="Alamat Studio" required>
+                <input type="text" name="studio_address" class="form-control" placeholder="Alamat Studio (Tulis nama jalan lengkap, nomor bangunan, RT/RW (jika ada), kelurahan, kecamatan, kota, provinsi, kode pos, dan negara.)" value="{{ old('studio_address') }}" required>
             </div>
             <div class="mb-3">
+                <label for="profile_photo" class="form-label">Studio's Logo</label>
                 <input type="file" name="studio_logo" class="form-control" accept="image/png,image/jpg,image/jpeg" required>
             </div>
             <button type="submit" class="btn btn-primary w-100">Sign Up</button>

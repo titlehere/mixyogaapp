@@ -1,62 +1,72 @@
 @extends('layouts.member_main')
 
 @section('content')
-<div class="max-w-4xl mx-auto mt-10">
-    <h1 class="text-2xl font-bold mb-4">Dashboard Member</h1>
+
+<style>
+    .studio-logo {
+        height: 150px;
+        width: 150px;
+        object-fit: cover;
+        display: block;
+        margin: 0 auto; /* Pusatkan gambar di dalam card */
+    }
+</style>
+
+<div class="container mt-5">
+    <h1 class="text-primary">Dashboard Member</h1>
     <p>Selamat datang di dashboard member, {{ session('user')->member_name }}!</p>
 
     <!-- Search Bar -->
     <div class="mb-5">
-        <input type="text" class="form-control" placeholder="Cari studio yoga (nama, lokasi, harga, jenis kelas)">
+        <form action="{{ route('member.dashboard') }}" method="GET">
+            <div class="input-group">
+                <input type="text" name="search" class="form-control" placeholder="Pencarian (nama, lokasi, dan kelas yoga)" value="{{ request('search') }}">
+                <button type="submit" class="btn btn-primary">Cari</button>
+            </div>
+        </form>
     </div>
 
-    <!-- Studio Yoga Terpopuler -->
+    <!-- Kelas Yoga Terbaru -->
     <section class="mb-5">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h2 class="text-primary">Studio Yoga Terpopuler</h2>
-            <a href="{{ route('jelajah.studio') }}" class="btn btn-primary">Jelajah Studio</a>
-        </div>
-        <div class="d-flex overflow-auto">
-            @for ($i = 1; $i <= 5; $i++)
-                <div class="card border-primary me-3" style="min-width: 250px;">
-                    <img src="{{ asset('public/images/popular_studio_'.$i.'.jpg') }}" class="card-img-top" alt="Studio Yoga #{{ $i }}">
-                    <div class="card-body">
-                        <h5 class="card-title text-primary">Studio Yoga #{{ $i }}</h5>
-                        <button class="btn btn-link text-primary">Lihat Detail</button>
-                    </div>
-                </div>
-            @endfor
-        </div>
-    </section>
-
-    <!-- Promosi Studio Yoga -->
-    <section class="mb-5">
-        <div class="bg-primary text-white text-center p-4 rounded">
-            <h3 class="mb-2">Promosi Studio Yoga</h3>
-            {{-- <a href="{{ route('studio.promosi') }}"> --}}
-                <img src="{{ asset('public/images/promosi_studio.jpg') }}" alt="Promosi Studio" class="img-fluid rounded" style="max-height: 300px;">
-            </a>
-        </div>
-    </section>
-
-    <!-- Rekomendasi Kelas -->
-    <section>
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h2 class="text-primary">Rekomendasi Kelas</h2>
+            <h2 class="text-primary">Kelas Yoga Terbaru</h2>
             <a href="{{ route('jelajah.kelas') }}" class="btn btn-primary">Jelajah Kelas</a>
         </div>
         <div class="d-flex overflow-auto">
-            @for ($i = 1; $i <= 5; $i++)
-                <div class="card border-primary me-3" style="min-width: 250px;">
-                    <img src="{{ asset('public/images/class_recommendation_'.$i.'.jpg') }}" class="card-img-top" alt="Kelas Yoga #{{ $i }}">
+            @foreach ($latestClasses as $class)
+                <div class="card me-3" style="min-width: 250px;">
+                    <a href="{{ route('kelas.detail', $class->kelas_uuid) }}">
+                        <img src="{{ asset('public/images/kelas_thumbnails/' . $class->kelas_thumbnail) }}" class="card-img-top" alt="{{ $class->kelas_name }}" style="height: 150px; object-fit: cover;">
+                    </a>
                     <div class="card-body">
-                        <h5 class="card-title text-primary">Kelas Yoga #{{ $i }}</h5>
-                        <button class="btn btn-link text-primary">Lihat Detail</button>
+                        <h5>{{ $class->kelas_name }}</h5>
+                        <p>Harga: Rp {{ number_format($class->kelas_harga, 0, ',', '.') }}</p>
+                        <p>Studio: {{ $class->studio->studio_name ?? '-' }}</p>
                     </div>
                 </div>
-            @endfor
+            @endforeach
         </div>
     </section>
-    <br>
+
+    <!-- Studio Yoga Terbaru -->
+    <section class="mb-5">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="text-primary">Studio Yoga Terbaru</h2>
+            <a href="{{ route('jelajah.studio') }}" class="btn btn-primary">Jelajah Studio</a>
+        </div>
+        <div class="d-flex overflow-auto">
+            @foreach ($latestStudios as $studio)
+                <div class="card me-3" style="min-width: 250px;">
+                    <a href="{{ route('studio.detail', $studio->studio_uuid) }}">
+                        <img src="{{ asset('public/images/studio_logos/' . $studio->studio_logo) }}" class="card-img-top studio-logo" alt="{{ $studio->studio_name }}">
+                    </a>
+                    <div class="card-body text-center">
+                        <h5>{{ $studio->studio_name }}</h5>
+                        {{-- <p>{{ $studio->studio_lokasi }}</p> --}}
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    </section>
 </div>
 @endsection

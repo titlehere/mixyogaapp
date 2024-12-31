@@ -10,15 +10,21 @@ class Pemesanan extends Model
     protected $primaryKey = 'booking_uuid';
     public $incrementing = false;
     protected $keyType = 'string';
-    protected $fillable = ['booking_uuid', 'jadwal_uuid', 'member_uuid', 'booking_date', 'booking_status'];
+    public $timestamps = false;
 
-    // Relasi ke jadwal
+    protected $fillable = [
+        'booking_uuid',
+        'jadwal_uuid',
+        'member_uuid',
+        'booking_date',
+        'booking_status',
+    ];
+
     public function jadwal()
     {
         return $this->belongsTo(Jadwal::class, 'jadwal_uuid', 'jadwal_uuid');
     }
 
-    // Relasi ke member
     public function member()
     {
         return $this->belongsTo(Member::class, 'member_uuid', 'member_uuid');
