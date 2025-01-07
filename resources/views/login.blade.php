@@ -27,7 +27,7 @@
             <!-- Login Form -->
             <div class="card shadow-sm">
                 <div class="card-header bg-primary text-white text-center">
-                    <h4 class="mb-0">Selamat Datang!</h4>
+                    <h4 class="mb-0">Silahkan Login</h4>
                 </div>
                 <div class="card-body">
                     <form action="{{ route('login') }}" method="POST">

@@ -5,27 +5,60 @@
     <!-- Header -->
     <header class="text-center mb-5">
         <h1 class="text-primary fw-bold">Selamat Datang di Mix Yoga</h1>
-        <p class="text-secondary">Temukan kelas yoga terbaik untuk Anda!</p>
+        <p class="text-secondary">Temukan kelas yoga terbaik, jadilah lebih sehat dan bugar bersama Mix Yoga!</p>
+        <a href="{{ route('login') }}" class="btn btn-primary btn-lg">Gabung Sekarang</a>
     </header>
 
-    {{-- <!-- Search Bar -->
-    <div class="mb-5">
-        <input type="text" class="form-control" placeholder="Cari studio yoga (nama, lokasi, harga, jenis kelas)">
-    </div> --}}
+    <!-- Slide Show Benefit -->
+    <section class="mb-5">
+        <h2 class="text-primary text-center mb-4">Keunggulan Bergabung dengan Mix Yoga</h2>
+        <div id="benefitCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="{{ asset('public/images/benefit_1.png') }}" class="d-block w-100 rounded" alt="Benefit 1">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5>Jaringan Studio Yoga Terluas</h5>
+                        <p>Jelajahi studio yoga berkualitas di berbagai lokasi.</p>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <img src="{{ asset('public/images/benefit_2.png') }}" class="d-block w-100 rounded" alt="Benefit 2">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5>Beragam Pilihan Kelas</h5>
+                        <p>Pilih kelas yang sesuai dengan kebutuhan dan tingkat kemampuan Anda.</p>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <img src="{{ asset('public/images/benefit_3.png') }}" class="d-block w-100 rounded" alt="Benefit 3">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5>Manajemen Jadwal Mudah</h5>
+                        <p>Atur jadwal kelas dan pantau aktivitas Anda langsung di dashboard.</p>
+                    </div>
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#benefitCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#benefitCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </section>
 
     <!-- Studio Yoga Terpopuler -->
     <section class="mb-5">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h2 class="text-primary">Studio Yoga Terpopuler</h2>
-            {{-- <a href="#" class="btn btn-primary">Jelajah Studio</a> --}}
-        </div>
-        <div class="d-flex overflow-auto">
-            @for ($i = 1; $i <= 5; $i++)
-                <div class="card border-primary me-3" style="min-width: 250px;">
-                    <img src="{{ asset('public/images/popular_studio_'.$i.'.jpg') }}" class="card-img-top" alt="Studio Yoga #{{ $i }}">
-                    <div class="card-body">
-                        <h5 class="card-title text-primary">Studio Yoga #{{ $i }}</h5>
-                        <button class="btn btn-link text-primary">Lihat Detail</button>
+        <h2 class="text-primary mb-4">Studio Yoga Terpopuler</h2>
+        <div class="row">
+            @for ($i = 1; $i <= 6; $i++)
+                <div class="col-md-4 mb-4">
+                    <div class="card border-primary">
+                        <img src="{{ asset('public/images/popular_studio_'.$i.'.jpg') }}" class="card-img-top" alt="Studio Yoga #{{ $i }}">
+                        <div class="card-body">
+                            <h5 class="card-title text-primary">Studio Yoga #{{ $i }}</h5>
+                            <a href="{{ route('login') }}" class="btn btn-primary">Lihat Detail</a>
+                        </div>
                     </div>
                 </div>
             @endfor
@@ -36,41 +69,49 @@
     <section class="mb-5">
         <div class="bg-primary text-white text-center p-4 rounded">
             <h3 class="mb-2">Promosi Studio Yoga</h3>
-            {{-- <a href="{{ route('studio.promosi') }}"> --}}
+            <a href="{{ route('login') }}">
                 <img src="{{ asset('public/images/promosi_studio.jpg') }}" alt="Promosi Studio" class="img-fluid rounded" style="max-height: 300px;">
             </a>
         </div>
     </section>
 
-    <!-- Rekomendasi Kelas -->
-    <section>
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h2 class="text-primary">Rekomendasi Kelas</h2>
-            {{-- <a href="#" class="btn btn-primary">Jelajah Kelas</a> --}}
-        </div>
-        <div class="d-flex overflow-auto">
-            @for ($i = 1; $i <= 5; $i++)
-                <div class="card border-primary me-3" style="min-width: 250px;">
-                    <img src="{{ asset('public/images/class_recommendation_'.$i.'.jpg') }}" class="card-img-top" alt="Kelas Yoga #{{ $i }}">
-                    <div class="card-body">
-                        <h5 class="card-title text-primary">Kelas Yoga #{{ $i }}</h5>
-                        <button class="btn btn-link text-primary">Lihat Detail</button>
-                    </div>
+    <!-- Fitur dan Keunggulan -->
+    <section class="text-white py-5 bg-primary">
+        <div class="container">
+            <h2 class="fw-bold text-center mb-4">Kenapa Harus Mix Yoga?</h2>
+            <div class="row">
+                <div class="col-md-4 text-center mb-4">
+                    <i class="bi bi-person-check-fill display-4"></i>
+                    <h5 class="mt-3">Trainer Profesional</h5>
+                    <p>Didukung oleh trainer berpengalaman dan bersertifikat.</p>
                 </div>
-            @endfor
+                <div class="col-md-4 text-center mb-4">
+                    <i class="bi bi-calendar-check-fill display-4"></i>
+                    <h5 class="mt-3">Pengelolaan Jadwal Mudah</h5>
+                    <p>Atur jadwal latihan dan pantau aktivitas dengan praktis.</p>
+                </div>
+                <div class="col-md-4 text-center mb-4">
+                    <i class="bi bi-graph-up display-4"></i>
+                    <h5 class="mt-3">Statistik Aktivitas</h5>
+                    <p>Melacak kemajuan dan aktivitas dengan fitur statistik yang informatif.</p>
+                </div>
+            </div>
         </div>
     </section>
 
-    <!-- About Us Section -->
-    <section class="text-white py-5" style="background: url('{{ asset('public/images/about_bg.jpg') }}') no-repeat center center; background-size: cover;">
-        <div class="container text-center py-5" style="background: rgba(0, 0, 0, 0.6); border-radius: 10px;">
-            <h2 class="fw-bold mb-4">About Us</h2>
-            <p class="lead">
-                Kami menyediakan berbagai kelas yoga dari studio terbaik di sekitar Anda. 
-                Bergabunglah bersama kami untuk mencapai keseimbangan dan kesehatan tubuh serta pikiran.
-            </p>
+    <!-- Screenshot Dashboard -->
+    <section class="mb-5">
+        <h2 class="text-primary mb-4 text-center">Lihat Dashboard Member dan Trainer</h2>
+        <div class="row text-center">
+            <div class="col-md-6 mb-3">
+                <img src="{{ asset('public/images/dashboard_member.jpg') }}" class="img-fluid rounded shadow" alt="Dashboard Member">
+                <p class="mt-2">Dashboard Member</p>
+            </div>
+            <div class="col-md-6 mb-3">
+                <img src="{{ asset('public/images/dashboard_trainer.jpg') }}" class="img-fluid rounded shadow" alt="Dashboard Trainer">
+                <p class="mt-2">Dashboard Trainer</p>
+            </div>
         </div>
     </section>
-
 </div>
 @endsection
