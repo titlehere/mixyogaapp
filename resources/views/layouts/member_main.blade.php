@@ -7,6 +7,8 @@
     <!-- Integrasi Bootstrap CSS dan Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Integrasi Font Awesome  -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 </head>
 <body class="d-flex flex-column min-vh-100 bg-light text-dark">
 
@@ -34,14 +36,18 @@
                 <!-- Profile -->
                 <div class="text-center mb-4">
                     <div style="width: 100px; height: 100px; overflow: hidden; border: 2px solid #ddd; border-radius: 50%;">
-                        @if (session('user')->profile_photo)
-                            <!-- Tampilkan gambar jika ada -->
-                            <img src="{{ asset('public/images/profiles/' . session('user')->profile_photo) }}" 
-                                class="w-100 h-100 object-fit-cover" width="80" alt="Foto Profil">
+                        @if (session('user') && session('user')->profile_photo)
+                        <!-- Tampilkan gambar jika ada -->
+                        <img src="{{ asset('public/images/profiles/' . session('user')->profile_photo) }}"
+                            class="w-100 h-100 object-fit-cover" width="80" alt="Foto Profil">
                         @else
                             <div class="mt-2">No Image</div>
                         @endif
-                        <h5>{{ session('user')->member_name }}</h5>
+                            @if (session('user') && session('user')->member_name)
+                            <h5>{{ session('user')->member_name }}</h5>
+                        @else
+                            <h5>Guest</h5> <!-- Atau nilai default lainnya -->
+                        @endif                    
                     </div>   
                 </div>                                          
                 <!-- Sidebar Buttons -->

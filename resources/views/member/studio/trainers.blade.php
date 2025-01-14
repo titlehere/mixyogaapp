@@ -25,7 +25,9 @@
                         <p><strong>Umur:</strong> {{ $trainer->trainer_umur ?? 'Tidak tersedia' }} tahun</p>
                         
                         <!-- Sertifikat -->
-                        <p><strong>Sertifikat:</strong> {{ $trainer->trainer_sertif ?? 'Tidak ada sertifikat' }}</p>
+                        @if ($trainer->trainer_sertif)
+                        <p><strong>Sertifikat:</strong> {{ $trainer->trainer_sertif }}</p>
+                        @endif
                         
                         <!-- Sosial Media -->
                         <div class="d-flex justify-content-center">

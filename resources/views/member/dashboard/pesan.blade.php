@@ -2,6 +2,9 @@
 
 @section('content')
 <div class="container">
+    @php
+        \Carbon\Carbon::setLocale('id'); // Mengatur locale ke bahasa Indonesia
+    @endphp
     <h2 class="mb-4 text-primary">Riwayat Pemesanan</h2>
 
     <!-- Tabs Status Pesanan -->
@@ -35,7 +38,7 @@
             @empty
                 <p>Tidak ada pesanan yang selesai.</p>
             @endforelse
-        </div>
+        </div>        
 
         <!-- Tab Dibatalkan -->
         <div class="tab-pane fade" id="cancelled">

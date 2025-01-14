@@ -2,6 +2,9 @@
 
 @section('content')
 <div class="container mt-5">
+    @php
+        \Carbon\Carbon::setLocale('id'); // Mengatur locale ke bahasa Indonesia
+    @endphp
     <h1>{{ $title }}</h1>
     <h2>Kelas: {{ $kelas->kelas_name }}</h2>
     <table class="table table-bordered">
@@ -23,15 +26,21 @@
                     <td>{{ $jadwal->jadwal_wkt }}</td>
                     <td>{{ $jadwal->trainer->trainer_name }}</td>
                     <td>{{ $jadwal->jadwal_status }}</td>
-                    <td>
-                        <a href="{{ route('jadwal.edit', [$kelas->kelas_uuid, $jadwal->jadwal_uuid]) }}" class="btn btn-warning btn-sm">Edit</a>
-                        <form action="{{ route('jadwal.destroy', [$kelas->kelas_uuid, $jadwal->jadwal_uuid]) }}" method="POST" class="d-inline">
-                            @csrf
-                            @method('DELETE')
-                            <button class="btn btn-danger btn-sm">Hapus</button>
-                        </form>
-                        <a href="{{ route('jadwal.member.pesan', [$kelas->kelas_uuid, $jadwal->jadwal_uuid]) }}" class="btn btn-info btn-sm">Member Pesan</a>
-                        <a href="{{ route('jadwal.member.review', [$kelas->kelas_uuid, $jadwal->jadwal_uuid]) }}" class="btn btn-info btn-sm">Member Review</a>
+                    <td class="text-center">
+                        <div class="mb-2">
+                            <!-- Row 1: Edit & Hapus -->
+                            <a href="{{ route('jadwal.edit', [$kelas->kelas_uuid, $jadwal->jadwal_uuid]) }}" class="btn btn-warning btn-sm me-2">Edit</a>
+                            <form action="{{ route('jadwal.destroy', [$kelas->kelas_uuid, $jadwal->jadwal_uuid]) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus jadwal ini?')" class="d-inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                            </form>
+                        </div>
+                        <!-- Row 2: Member Pesan & Member Review -->
+                        <div>
+                            <a href="{{ route('jadwal.member.pesan', [$kelas->kelas_uuid, $jadwal->jadwal_uuid]) }}" class="btn btn-info btn-sm text-white me-2" style="background-color: #17a2b8;">Lihat Member Pesan</a>
+                            <a href="{{ route('jadwal.member.review', [$kelas->kelas_uuid, $jadwal->jadwal_uuid]) }}" class="btn btn-success btn-sm">Lihat Member Review</a>
+                        </div>
                     </td>
                 </tr>
             @empty

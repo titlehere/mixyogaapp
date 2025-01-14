@@ -10,19 +10,34 @@ use Illuminate\Support\Str;
 class KelasYogaController extends Controller
 {
     // Menampilkan halaman Kelola Kelas
-    public function index()
-    {
-        $user = session('user');
-        $studio = StudioYoga::where('owner_uuid', $user->owner_uuid)->first();
-        
-        $classes = KelasYoga::where('studio_uuid', $studio->studio_uuid)->get();
-
-        return view('owner.dashboard.kelola_kelas', [ // Lokasi diperbarui
-            'title' => 'Kelola Kelas Yoga',
-            'classes' => $classes,
-            'studio' => $studio,
-        ]);
+public function index()
+{
+    $user = session('user');
+    
+    // Periksa apakah session 'user' ada dan memiliki properti owner_uuid
+    if (!$user || !isset($user->owner_uuid)) {
+        return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu.');
     }
+    
+    // Ambil data studio berdasarkan owner_uuid
+    $studio = StudioYoga::where('owner_uuid', $user->owner_uuid)->first();
+    
+    // Periksa apakah studio ditemukan
+    if (!$studio) {
+        return redirect()->route('owner.profile_studio')->with('error', 'Studio tidak ditemukan.');
+    }
+    
+    // Ambil semua kelas yoga terkait studio
+    $classes = KelasYoga::with('jadwals') // Tambahkan relasi jadwals jika dibutuhkan
+        ->where('studio_uuid', $studio->studio_uuid)
+        ->get();
+    
+    return view('owner.dashboard.kelola_kelas', [
+        'title' => 'Kelola Kelas',
+        'studio' => $studio,
+        'classes' => $classes,
+    ]);
+}
 
     public function exploreClasses(Request $request)
     {

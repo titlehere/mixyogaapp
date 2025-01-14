@@ -56,4 +56,9 @@ public function reviews()
         return $this->hasMany(Review::class, 'jadwal_uuid', 'jadwal_uuid');
     }
 
+    public function getPemesananCountAttribute()
+    {
+        return $this->pemesanan()->count(); // Menghitung jumlah pemesanan pada jadwal
+    }
+    
 }

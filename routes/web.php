@@ -145,6 +145,7 @@ Route::post('/member/pesan/{booking_uuid}/review', [ReviewController::class, 'su
 
 // Halaman Laporan bagi Owner
 Route::get('/owner/laporan', [OwnerController::class, 'laporan'])->name('owner.laporan');
+Route::get('/owner/laporan/cetak', [OwnerController::class, 'cetakLaporan'])->name('owner.laporan.cetak');
 
 // Bantuan & FAQ
 Route::get('/owner/bantuan-faq', [OwnerController::class, 'bantuanFaq'])->name('owner.bantuan_faq');
@@ -156,3 +157,13 @@ Route::get('/kelas/{kelas_uuid}/jadwal/{jadwal_uuid}/member-pesan', [JadwalContr
 // Route untuk melihat daftar review dan rating member pada jadwal
 Route::get('/kelas/{kelas_uuid}/jadwal/{jadwal_uuid}/member-review', [JadwalController::class, 'memberReview'])
     ->name('jadwal.member.review');
+
+// Route untuk mengunggah bukti pembayaran
+Route::get('/member/pesan/{booking_uuid}/upload-bukti', [PembayaranController::class, 'showUploadForm'])->name('pembayaran.upload.form');
+Route::post('/member/pesan/{booking_uuid}/upload-bukti', [PembayaranController::class, 'uploadBukti'])->name('pembayaran.upload');
+
+// Route untuk melihat bukti pembayaran (member)
+Route::get('/member/pesan/{booking_uuid}/lihat-bukti', [PembayaranController::class, 'showBukti'])->name('pembayaran.bukti');
+
+// Route untuk melihat bukti pembayaran (owner)
+Route::get('/owner/pembayaran/{payment_uuid}/lihat-bukti', [PembayaranController::class, 'lihatBukti'])->name('owner.bukti');

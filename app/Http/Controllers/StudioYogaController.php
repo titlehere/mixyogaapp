@@ -42,27 +42,30 @@ class StudioYogaController extends Controller
     }
 
     //Menampilkan detail studio di dashbaord member
-// Menampilkan detail studio di dashboard member
     public function detail($studio_uuid)
-    {
-        // Ambil data studio berdasarkan UUID
-        $studio = StudioYoga::with(['owner', 'classes'])->where('studio_uuid', $studio_uuid)->firstOrFail();
+{
+    $studio = StudioYoga::with(['owner', 'classes.jadwals'])->where('studio_uuid', $studio_uuid)->firstOrFail();
 
-        // Hitung rata-rata rating dan total ulasan berdasarkan jadwal yang terkait dengan studio
-        $jadwalUuids = $studio->classes->flatMap(function ($kelas) {
-            return $kelas->jadwals->pluck('jadwal_uuid');
+    foreach ($studio->classes as $kelas) {
+        $kelas->hasActiveJadwal = $kelas->jadwals->contains(function ($jadwal) {
+            return $jadwal->jadwal_status === 'Belum Mulai';
         });
-
-        $averageRating = Review::whereIn('jadwal_uuid', $jadwalUuids)->avg('review_rating');
-        $totalReviews = Review::whereIn('jadwal_uuid', $jadwalUuids)->count();
-
-        // Kirim data ke view
-        return view('member.studio.detail', [
-            'studio' => $studio,
-            'averageRating' => $averageRating,
-            'totalReviews' => $totalReviews,
-        ]);
     }
+
+    // Hitung rating rata-rata dan ulasan total
+    $jadwalUuids = $studio->classes->flatMap(function ($kelas) {
+        return $kelas->jadwals->pluck('jadwal_uuid');
+    });
+
+    $averageRating = Review::whereIn('jadwal_uuid', $jadwalUuids)->avg('review_rating');
+    $totalReviews = Review::whereIn('jadwal_uuid', $jadwalUuids)->count();
+
+    return view('member.studio.detail', [
+        'studio' => $studio,
+        'averageRating' => $averageRating,
+        'totalReviews' => $totalReviews,
+    ]);
+}
 
 // Menampilkan daftar trainer untuk studio tertentu
     public function trainers($studio_uuid)
@@ -79,14 +82,21 @@ class StudioYogaController extends Controller
 
     public function classes($studio_uuid)
     {
-        $studio = StudioYoga::with('classes')->findOrFail($studio_uuid);
-
+        $studio = StudioYoga::with('classes.jadwals')->findOrFail($studio_uuid);
+    
+        // Periksa apakah ada jadwal aktif untuk setiap kelas
+        foreach ($studio->classes as $kelas) {
+            $kelas->hasActiveJadwal = $kelas->jadwals->contains(function ($jadwal) {
+                return $jadwal->jadwal_status === 'Belum Mulai';
+            });
+        }
+    
         return view('member.studio.classes', [
             'title' => 'Daftar Kelas Studio',
             'studio' => $studio,
-            'classes' => $studio->classes, // Asumsi relasi classes telah didefinisikan
+            'classes' => $studio->classes, // Mengirimkan data kelas dengan properti tambahan
         ]);
-    }
+    }    
 
     public function simpanStudio($studio_uuid)
     {

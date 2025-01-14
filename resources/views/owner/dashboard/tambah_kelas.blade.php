@@ -24,7 +24,7 @@
         </div>
 
         <div class="mb-3">
-            <label for="kelas_harga" class="form-label">Harga Kelas (Rp)</label>
+            <label for="kelas_harga" class="form-label">Harga Kelas (Rp, masukan nomimal)</label>
             <input type="number" id="kelas_harga" name="kelas_harga" class="form-control" required>
         </div>
 

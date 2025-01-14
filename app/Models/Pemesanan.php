@@ -22,11 +22,16 @@ class Pemesanan extends Model
 
     public function jadwal()
     {
-        return $this->belongsTo(Jadwal::class, 'jadwal_uuid', 'jadwal_uuid');
+        return $this->belongsTo(Jadwal::class, 'jadwal_uuid', 'jadwal_uuid')->with('reviews');
     }
 
     public function member()
     {
         return $this->belongsTo(Member::class, 'member_uuid', 'member_uuid');
+    }
+
+    public function pembayaran()
+    {
+        return $this->hasOne(Pembayaran::class, 'booking_uuid', 'booking_uuid');
     }
 }

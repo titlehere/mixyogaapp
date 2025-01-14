@@ -3,22 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pemesanan;
+use App\Models\Jadwal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class PemesananController extends Controller
 {
-    public function store(Request $request, $kelas_uuid, $jadwal_uuid)
+        public function store(Request $request, $kelas_uuid, $jadwal_uuid)
     {
         $member_uuid = session('user')->member_uuid;
 
-        // Cek apakah member sudah memesan jadwal ini
-        $existingOrder = Pemesanan::where('jadwal_uuid', $jadwal_uuid)
-            ->where('member_uuid', $member_uuid)
-            ->first();
+        // Ambil data jadwal
+        $jadwal = Jadwal::with('pemesanan')->findOrFail($jadwal_uuid);
 
-        if ($existingOrder) {
-            return redirect()->route('member.pesan')->with('error', 'Anda sudah memesan jadwal ini.');
+        // Periksa apakah kapasitas sudah penuh
+        if ($jadwal->pemesanan_count >= $jadwal->kelas->kelas_kapasitas) {
+            return redirect()->back()->with('error', 'Kapasitas kelas sudah penuh.');
         }
 
         // Buat pemesanan baru
@@ -34,32 +34,36 @@ class PemesananController extends Controller
     }
 
     public function showOrders()
-    {
-        $user = session('user');
+{
+    $user = session('user');
 
-        // Ambil data pemesanan berdasarkan status
-        $ongoingOrders = Pemesanan::with('jadwal.kelas')
-            ->where('member_uuid', $user->member_uuid)
-            ->where('booking_status', 'Booked')
-            ->get();
-
-        $completedOrders = Pemesanan::with('jadwal.kelas')
-            ->where('member_uuid', $user->member_uuid)
-            ->where('booking_status', 'Completed')
-            ->get();
-
-        $cancelledOrders = Pemesanan::with('jadwal.kelas')
-            ->where('member_uuid', $user->member_uuid)
-            ->where('booking_status', 'Cancelled')
-            ->get();
-
-        return view('member.dashboard.pesan', [
-            'title' => 'Riwayat Pemesanan',
-            'ongoingOrders' => $ongoingOrders,
-            'completedOrders' => $completedOrders,
-            'cancelledOrders' => $cancelledOrders,
-        ]);
+    // Periksa apakah session 'user' ada dan memiliki properti member_uuid
+    if (!$user || !isset($user->member_uuid)) {
+        return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu.');
     }
+
+    $ongoingOrders = Pemesanan::with(['jadwal.kelas', 'pembayaran'])
+        ->where('member_uuid', $user->member_uuid)
+        ->whereIn('booking_status', ['Booked', 'Verification'])
+        ->get();
+
+    $completedOrders = Pemesanan::with(['jadwal.kelas'])
+        ->where('member_uuid', $user->member_uuid)
+        ->where('booking_status', 'Completed')
+        ->get();
+
+    $cancelledOrders = Pemesanan::with(['jadwal.kelas'])
+        ->where('member_uuid', $user->member_uuid)
+        ->where('booking_status', 'Cancelled')
+        ->get();
+
+    return view('member.dashboard.pesan', [
+        'title' => 'Riwayat Pemesanan',
+        'ongoingOrders' => $ongoingOrders,
+        'completedOrders' => $completedOrders,
+        'cancelledOrders' => $cancelledOrders,
+    ]);
+}
 
     public function cancel($booking_uuid)
     {

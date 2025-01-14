@@ -93,8 +93,12 @@ class OwnerController extends Controller
     public function profileStudio()
     {
         $user = session('user'); // Ambil user dari session
+        if (!$user || !isset($user->owner_uuid)) {
+            return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu.');
+        }
+    
         $studio = StudioYoga::where('owner_uuid', $user->owner_uuid)->first(); // Cari studio berdasarkan owner
-
+    
         if (!$studio) {
             return redirect()->route('owner.dashboard')->with('error', 'Data studio tidak ditemukan.');
         }
@@ -176,13 +180,66 @@ class OwnerController extends Controller
             }])
             ->get();
 
+        // Ambil data review dari member berdasarkan studio
+        $reviews = Review::with(['jadwal.kelas', 'member'])
+            ->whereHas('jadwal.kelas', function ($query) use ($studio) {
+                $query->where('studio_uuid', $studio->studio_uuid);
+            })
+            ->orderBy('review_date', 'desc') // Gunakan review_date
+            ->get();    
+
         return view('owner.dashboard.laporan', [
             'title' => 'Laporan Studio',
             'studio' => $studio,
             'laporanPeriode' => $laporanPeriode,
             'pendapatanPerKelas' => $pendapatanPerKelas,
+            'reviews' => $reviews, // Tambahkan data review
         ]);
     }
+
+    public function cetakLaporan()
+    {
+        $user = session('user');
+    
+        if (!$user) {
+            return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu.');
+        }
+    
+        $studio = StudioYoga::where('owner_uuid', $user->owner_uuid)->first();
+        if (!$studio) {
+            return redirect()->route('owner.profile_studio')->with('error', 'Studio tidak ditemukan.');
+        }
+    
+        // Data laporan periode
+        $laporanPeriode = Pembayaran::where('studio_uuid', $studio->studio_uuid)
+            ->selectRaw('DATE_FORMAT(payment_date, "%Y-%m") as periode, SUM(payment_nominal) as total_pendapatan, COUNT(*) as jumlah_transaksi')
+            ->groupBy('periode')
+            ->get();
+    
+        // Pendapatan per kelas
+        $pendapatanPerKelas = KelasYoga::where('studio_uuid', $studio->studio_uuid)
+            ->with(['jadwals' => function ($query) {
+                $query->withSum('pembayarans', 'payment_nominal');
+            }])
+            ->get();
+    
+        // Review dan rating member
+        $reviews = Review::with(['jadwal.kelas', 'member'])
+            ->whereHas('jadwal.kelas', function ($query) use ($studio) {
+                $query->where('studio_uuid', $studio->studio_uuid);
+            })
+            ->orderBy('review_date', 'desc')
+            ->get();
+    
+        return view('owner.laporan.cetak', [
+            'title' => 'Cetak Laporan Studio',
+            'studio' => $studio,
+            'laporanPeriode' => $laporanPeriode,
+            'pendapatanPerKelas' => $pendapatanPerKelas,
+            'reviews' => $reviews,
+        ]);
+    }    
+
     public function bantuanFaq()
     {
         $user = session('user');

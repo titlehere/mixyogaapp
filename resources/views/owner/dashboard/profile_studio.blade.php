@@ -5,6 +5,10 @@
     <h1>Edit Profil & Studio</h1>
     <form action="{{ route('owner.update_studio') }}" method="POST" enctype="multipart/form-data">
         @csrf
+            <!-- Notifikasi sukses -->
+        @if (session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+        @endif
         <h3>Profil Owner</h3>
         <div class="mb-3">
             <label for="owner_name" class="form-label">Nama Owner</label>

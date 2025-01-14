@@ -22,7 +22,6 @@
                                 <!-- Perbarui sesuai route -->
                                 <a href="{{ route('owner.edit_kelas', $class->kelas_uuid) }}" class="btn btn-success btn-sm">Edit</a>
                                 <a href="{{ route('kelas.jadwal', $class->kelas_uuid) }}" class="btn btn-info btn-sm">Jadwal Kelas</a>
-                                {{-- <a href="{{ route('kelas.member', $class->kelas_uuid) }}" class="btn btn-primary btn-sm">Member Pesan</a> --}}
                                 <form action="{{ route('kelas.destroy', $class->kelas_uuid) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus kelas ini?')">
                                     @csrf
                                     @method('DELETE')

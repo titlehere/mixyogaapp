@@ -2,19 +2,9 @@
 
 @section('content')
 
-<style>
-    .studio-logo {
-        height: 150px;
-        width: 150px;
-        object-fit: cover;
-        display: block;
-        margin: 0 auto; /* Pusatkan gambar di dalam card */
-    }
-</style>
-
 <div class="container mt-5">
     <h1 class="text-primary">Dashboard Member</h1>
-    <p>Selamat datang di dashboard member, {{ session('user')->member_name }}!</p>
+    <p>Selamat datang di dashboard member, {{ session('user')->member_name ?? 'Member' }}!</p>
 
     <!-- Search Bar -->
     <div class="mb-5">
@@ -42,6 +32,23 @@
                         <h5>{{ $class->kelas_name }}</h5>
                         <p>Harga: Rp {{ number_format($class->kelas_harga, 0, ',', '.') }}</p>
                         <p>Studio: {{ $class->studio->studio_name ?? '-' }}</p>
+                        <p>
+                            <strong>Rating:</strong>
+                            @if ($class->averageRating > 0)
+                                {{ number_format($class->averageRating, 1) }} 
+                                <span class="text-warning">
+                                    @for ($i = 0; $i < floor($class->averageRating); $i++)
+                                        <i class="fa fa-star"></i>
+                                    @endfor
+                                    @if ($class->averageRating - floor($class->averageRating) > 0)
+                                        <i class="fa fa-star-half-alt"></i>
+                                    @endif
+                                </span>
+                                ({{ $class->reviews_count }} ulasan)
+                            @else
+                                Belum ada rating
+                            @endif
+                        </p>
                     </div>
                 </div>
             @endforeach
@@ -56,13 +63,15 @@
         </div>
         <div class="d-flex overflow-auto">
             @foreach ($latestStudios as $studio)
-                <div class="card me-3" style="min-width: 250px;">
+                <div class="card me-3 text-center" style="min-width: 250px; border: none;">
                     <a href="{{ route('studio.detail', $studio->studio_uuid) }}">
-                        <img src="{{ asset('public/images/studio_logos/' . $studio->studio_logo) }}" class="card-img-top studio-logo" alt="{{ $studio->studio_name }}">
+                        <img src="{{ asset('public/images/studio_logos/' . $studio->studio_logo) }}" 
+                            class="card-img-top rounded-circle mx-auto mt-3" 
+                            style="max-width: 150px; max-height: 150px; object-fit: cover;" 
+                            alt="{{ $studio->studio_name }}">
                     </a>
-                    <div class="card-body text-center">
+                    <div class="card-body">
                         <h5>{{ $studio->studio_name }}</h5>
-                        {{-- <p>{{ $studio->studio_lokasi }}</p> --}}
                     </div>
                 </div>
             @endforeach

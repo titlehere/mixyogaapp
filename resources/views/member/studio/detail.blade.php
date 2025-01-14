@@ -10,7 +10,6 @@
     <div class="d-flex justify-content-between align-items-center">
         <h2>{{ $studio->studio_name }}</h2>
         <div>
-            {{-- <button class="btn btn-outline-secondary me-2">Bagikan</button> --}}
             <form action="{{ route('save.studio', $studio->studio_uuid) }}" method="POST" class="d-inline">
                 @csrf
                 <button type="submit" class="btn btn-primary">Simpan</button>
@@ -28,9 +27,22 @@
     <div>
         <p>
             <strong>Rata-rata Rating:</strong> 
-            {{ $averageRating ? number_format($averageRating, 1) : 'Belum ada rating' }} 
-            ({{ $totalReviews }} ulasan)
-        </p>
+            @php
+                $fullStars = floor($averageRating);
+                $halfStar = $averageRating - $fullStars >= 0.5;
+                $emptyStars = 5 - $fullStars - ($halfStar ? 1 : 0);
+            @endphp
+            @for ($i = 0; $i < $fullStars; $i++)
+                <i class="fas fa-star text-warning"></i>
+            @endfor
+            @if ($halfStar)
+                <i class="fas fa-star-half-alt text-warning"></i>
+            @endif
+            @for ($i = 0; $i < $emptyStars; $i++)
+                <i class="far fa-star text-warning"></i>
+            @endfor
+            ({{ $averageRating ? number_format($averageRating, 1) : 'Belum ada rating' }} dari {{ $totalReviews }} ulasan)
+        </p>        
     </div>
 
     <!-- Tombol Navigasi -->
@@ -40,21 +52,65 @@
     </div>
 
     <!-- Kelas Tersedia -->
-    <h5 class="mt-4">Kelas Tersedia</h5>
-    <div class="row overflow-auto">
+<h5 class="mt-4">Kelas Tersedia</h5>
+<div class="row overflow-auto">
+    @if ($studio->classes->isEmpty())
+        <p class="text-center text-secondary">Belum ada kelas tersedia</p>
+    @else
         @foreach ($studio->classes as $kelas)
         <div class="col-md-4 mb-3">
             <div class="card">
-                <img src="{{ asset('public/images/kelas_thumbnails/' . $kelas->kelas_thumbnail) }}" alt="{{ $kelas->kelas_name }}" class="card-img-top">
-                <div class="card-body">
+                <img src="{{ asset('public/images/kelas_thumbnails/' . ($kelas->kelas_thumbnail ?? 'default_thumbnail.jpg')) }}" 
+                    alt="{{ $kelas->kelas_name }}" 
+                    class="card-img-top" 
+                    style="height: 200px; object-fit: cover;">
+                <div class="card-body text-center">
                     <h5 class="card-title">{{ $kelas->kelas_name }}</h5>
                     <p class="card-text">Harga: Rp {{ number_format($kelas->kelas_harga, 0, ',', '.') }}</p>
-                    <a href="{{ route('kelas.detail', $kelas->kelas_uuid) }}" class="btn btn-primary">Lihat Detail</a>
+                    
+                    <!-- Rata-rata Rating -->
+                    <p class="card-text">
+                        <strong>Rata-rata Rating:</strong>
+                        @php
+                            $averageRating = $kelas->reviews->avg('review_rating');
+                            $totalReviews = $kelas->reviews->count();
+                        @endphp
+                        @if ($totalReviews > 0)
+                            @for ($i = 1; $i <= 5; $i++)
+                                @if ($i <= floor($averageRating))
+                                    <i class="fas fa-star text-warning"></i>
+                                @elseif ($i - $averageRating < 1)
+                                    <i class="fas fa-star-half-alt text-warning"></i>
+                                @else
+                                    <i class="far fa-star text-warning"></i>
+                                @endif
+                            @endfor
+                            <span>({{ number_format($averageRating, 1) }}, {{ $totalReviews }} ulasan)</span>
+                        @else
+                            Belum ada rating
+                        @endif
+                    </p>
+                    
+                    <!-- Kapasitas -->
+                    <p class="card-text">
+                        <strong>Kapasitas:</strong> {{ $kelas->kelas_kapasitas }}
+                    </p>
+                    
+                    <!-- Tombol -->
+                    <div class="d-flex justify-content-center">
+                        <a href="{{ route('kelas.detail', $kelas->kelas_uuid) }}" class="btn btn-primary me-2">Lihat Detail Kelas</a>
+                        @if ($kelas->hasActiveJadwal)
+                            <a href="{{ route('kelas.jadwal.member', $kelas->kelas_uuid) }}" class="btn btn-success">Pesan Kelas</a>
+                        @else
+                            <button class="btn btn-secondary" disabled>Tidak Tersedia Jadwal</button>
+                        @endif
+                    </div>                    
                 </div>
             </div>
         </div>
         @endforeach
-    </div>
+    @endif
+</div>
 
     <!-- Informasi Studio -->
     <div class="mt-5">

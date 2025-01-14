@@ -5,15 +5,22 @@
             <div class="col-md-6">
                 <div class="d-flex align-items-center mb-3">
                     <img src="{{ asset('public/images/studio_logos/' . ($order->jadwal?->kelas?->studio?->studio_logo ?? 'default_logo.png')) }}" 
-                         alt="Studio Logo" class="me-2" 
-                         style="width: 50px; height: 50px; border-radius: 50%;">
+                        alt="Studio Logo" class="me-2" 
+                        style="width: 50px; height: 50px; border-radius: 50%;">
                     <h5 class="m-0">{{ $order->jadwal?->kelas?->kelas_name ?? 'Kelas Tidak Ditemukan' }}</h5>
                 </div>
-                
                 <p>
                     <strong>Studio:</strong> {{ $order->jadwal?->kelas?->studio?->studio_name ?? 'Studio Tidak Ditemukan' }}<br>
                     <strong>Harga:</strong> Rp {{ number_format($order->jadwal?->kelas?->kelas_harga ?? 0, 0, ',', '.') }}<br>
-                    <strong>Status:</strong> {{ $order->booking_status ?? 'Status Tidak Ditemukan' }}
+                    <strong>Status:</strong> 
+                    <span class="badge 
+                        @if($order->booking_status == 'Booked') bg-primary
+                        @elseif($order->booking_status == 'Verification') bg-warning text-dark
+                        @elseif($order->booking_status == 'Completed') bg-success
+                        @else bg-secondary
+                        @endif">
+                        {{ ucfirst($order->booking_status) ?? 'Status Tidak Ditemukan' }}
+                    </span>
                 </p>
             </div>
 
@@ -50,30 +57,32 @@
         </iframe>
 
         <!-- Tombol Aksi -->
-        @if ($order->booking_status == 'Booked')
-            <div class="mt-3">
-                <!-- Form Batalkan -->
-                <form action="{{ route('pemesanan.cancel', $order->booking_uuid) }}" method="POST" class="d-inline" 
-                    onsubmit="return confirm('Apakah Anda yakin ingin membatalkan pesanan kelas ini?');">
+        <div class="mt-3">
+            @if ($order->booking_status == 'Booked')
+                <!-- Tombol Bayar -->
+                <a href="{{ route('pembayaran.form', $order->booking_uuid) }}" class="btn btn-success btn-sm">Bayar</a>
+
+                <!-- Tombol Batalkan -->
+                <form action="{{ route('pemesanan.cancel', $order->booking_uuid) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin membatalkan pesanan ini?');">
                     @csrf
                     @method('PUT')
                     <button class="btn btn-danger btn-sm">Batalkan</button>
                 </form>
+            @elseif ($order->booking_status == 'Verification')
+                <!-- Tombol Upload Bukti Pembayaran -->
+                <p style="color: gray;"><i>*Segera unggah bukti pembayaran untuk menyelesaikan pembayaran.*</i></p>
+                <a href="{{ route('pembayaran.upload.form', $order->booking_uuid) }}" class="btn btn-success btn-sm">Upload Bukti Pembayaran</a>
+            @elseif ($order->booking_status == 'Completed')
+                <!-- Tombol Lihat Bukti Pembayaran -->
+                <a href="{{ route('pembayaran.bukti', $order->booking_uuid) }}" class="btn btn-primary btn-sm">Lihat Bukti Pembayaran</a>
 
-                <!-- Form Bayar -->
-                <form action="{{ route('pembayaran.form', $order->booking_uuid) }}" method="GET" class="d-inline">
-                    @csrf
-                    <button class="btn btn-success btn-sm">Bayar</button>
-                </form>
-            </div>
-        @elseif ($order->booking_status == 'Completed')
-            <div class="mt-3">
-                <!-- Form Review -->
-                <form action="{{ route('review.form', $order->booking_uuid) }}" method="GET" class="d-inline">
-                    @csrf
-                    <button class="btn btn-primary btn-sm">Review</button>
-                </form>
-            </div>
-        @endif
+                <!-- Tombol Review -->
+                @if ($order->jadwal?->reviews->where('member_uuid', session('user')->member_uuid)->isEmpty())
+                    <a href="{{ route('review.form', $order->booking_uuid) }}" class="btn btn-warning btn-sm">Review</a>
+                @else
+                    <button class="btn btn-secondary btn-sm" disabled>Sudah Direview</button>
+                @endif
+            @endif
+        </div>
     </div>
 </div>

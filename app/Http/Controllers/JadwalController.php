@@ -15,7 +15,10 @@ class JadwalController extends Controller
     public function index($kelas_uuid)
     {
         $kelas = KelasYoga::findOrFail($kelas_uuid);
-        $jadwals = $kelas->jadwals()->with('trainer')->get();
+        $jadwals = $kelas->jadwals()
+            ->with('trainer')
+            ->orderBy('jadwal_tgl', 'desc') // Urutkan dari tanggal terbaru
+            ->get();
 
         return view('owner.dashboard.jadwal', [
             'title' => 'Jadwal Kelas',
@@ -103,8 +106,11 @@ class JadwalController extends Controller
     public function showForMember($kelas_uuid)
     {
         $kelas = KelasYoga::findOrFail($kelas_uuid);
-        $jadwals = $kelas->jadwals()->with('trainer')->get();
-    
+        $jadwals = $kelas->jadwals()
+            ->with('trainer')
+            ->orderBy('jadwal_tgl', 'desc') // Urutkan dari tanggal terbaru
+            ->get();
+
         return view('member.kelas.jadwal_member', [
             'title' => 'Jadwal Kelas',
             'kelas' => $kelas,
@@ -112,50 +118,45 @@ class JadwalController extends Controller
         ]);
     }    
 
+    // Menampilkan daftar member yang memesan jadwal tertentu
     public function memberPesan($kelas_uuid, $jadwal_uuid)
     {
-        // Ambil data kelas berdasarkan UUID
         $kelas = KelasYoga::findOrFail($kelas_uuid);
-    
-        // Ambil data jadwal berdasarkan UUID
         $jadwal = Jadwal::where('jadwal_uuid', $jadwal_uuid)->with('kelas')->firstOrFail();
-    
-        // Ambil data member yang memesan kelas berdasarkan jadwal
         $members = Pemesanan::where('jadwal_uuid', $jadwal_uuid)
-            ->whereHas('member')
-            ->with('member')
-            ->get()
-            ->pluck('member');
-    
+        ->with('member') // Memastikan data member dimuat
+        ->get();    
+
+        $totalMembers = $members->count();
+
         return view('owner.dashboard.member_pesan', [
             'kelas' => $kelas,
             'jadwal' => $jadwal,
             'members' => $members,
+            'totalMembers' => $totalMembers,
             'title' => 'Daftar Member yang Memesan Jadwal',
         ]);
     }
-    
 
+    // Menampilkan review member untuk jadwal tertentu
     public function memberReview($kelas_uuid, $jadwal_uuid)
     {
-        // Ambil data kelas berdasarkan UUID
         $kelas = KelasYoga::findOrFail($kelas_uuid);
-
-        // Ambil data jadwal berdasarkan UUID
         $jadwal = Jadwal::where('jadwal_uuid', $jadwal_uuid)->with('kelas')->firstOrFail();
-
-        // Ambil review dari member berdasarkan jadwal
         $reviews = Review::where('jadwal_uuid', $jadwal_uuid)
-            ->with('member') // Pastikan ada relasi ke tabel member
+            ->with('member')
             ->get();
+
+        $totalRating = $reviews->sum('review_rating');
+        $averageRating = $reviews->count() > 0 ? round($reviews->avg('review_rating'), 1) : 0;
 
         return view('owner.dashboard.member_review', [
             'kelas' => $kelas,
             'jadwal' => $jadwal,
             'reviews' => $reviews,
+            'totalRating' => $totalRating,
+            'averageRating' => $averageRating,
             'title' => 'Daftar Review dari Member',
         ]);
     }
-
-
 }

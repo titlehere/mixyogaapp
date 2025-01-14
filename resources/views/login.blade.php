@@ -37,10 +37,12 @@
                             <input type="email" name="email" class="form-control" placeholder="Enter your email" required>
                         </div>
                         
-                        <div class="mb-3 position-relative">
+                        <div class="mb-3">
                             <label for="password" class="form-label">Password</label>
-                            <input type="password" id="password" name="password" class="form-control" placeholder="Enter your password" required>
-                            <button type="button" onclick="togglePassword('password')" class="btn btn-link position-absolute top-0 end-0 mt-2 me-2">Show</button>
+                            <div class="input-group">
+                                <input type="password" id="password" name="password" class="form-control" placeholder="Enter your password" required>
+                                <button type="button" class="btn btn-outline-secondary" onclick="togglePassword('password')">Show</button>
+                            </div>
                         </div>
 
                         <button type="submit" class="btn btn-primary w-100">Log In</button>

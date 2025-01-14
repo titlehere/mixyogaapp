@@ -49,4 +49,9 @@ class Member extends Authenticatable
         'saved_classes' => 'array', // Cast JSON to array
         'saved_studios' => 'array',
     ];
+
+    public function pemesanan()
+    {
+        return $this->hasMany(Pemesanan::class, 'member_uuid', 'member_uuid');
+    }
 }

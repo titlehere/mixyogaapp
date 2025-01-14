@@ -30,7 +30,7 @@ class KelasYoga extends Model
 
         public function jadwals()
     {
-        return $this->hasMany(Jadwal::class, 'kelas_uuid', 'kelas_uuid');
+        return $this->hasMany(Jadwal::class, 'kelas_uuid', 'kelas_uuid')->orderBy('jadwal_tgl', 'desc');
     }
 
     // KelasYoga.php

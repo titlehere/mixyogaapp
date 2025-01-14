@@ -7,15 +7,15 @@
         @csrf
         <h3>Identitas Trainer</h3>
         <div class="mb-3">
-            <label for="trainer_name" class="form-label">Nama Trainer (Wajib diisi)</label>
+            <label for="trainer_name" class="form-label">Nama Trainer</label>
             <input type="text" name="trainer_name" id="trainer_name" class="form-control" required>
         </div>
         <div class="mb-3">
-            <label for="trainer_desk" class="form-label">Deskripsi</label>
+            <label for="trainer_desk" class="form-label">Deskripsi (Opsional)</label>
             <textarea name="trainer_desk" id="trainer_desk" class="form-control"></textarea>
         </div>
         <div class="mb-3">
-            <label for="trainer_umur" class="form-label">Umur (Wajib diisi)</label>
+            <label for="trainer_umur" class="form-label">Umur</label>
             <input type="number" name="trainer_umur" id="trainer_umur" class="form-control" required>
         </div>
         <div class="mb-3">
